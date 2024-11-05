@@ -20,7 +20,7 @@ public class ReservationSystem {
         boolean running = true;
 
         while (running) {
-            // Mostrar el menú de opciones
+            // Sirve para mostrar el menu de opciones
             System.out.println("\n--- Sports Reservation System ---");
             System.out.println("1. Registrar Espacio Deportivo");
             System.out.println("2. Agregar Reserva");
@@ -30,9 +30,9 @@ public class ReservationSystem {
             System.out.println("6. Salir");
             System.out.print("Seleccione una opcion: ");
             int option = scanner.nextInt();
-            scanner.nextLine(); // Limpiar el buffer
+            scanner.nextLine(); 
 
-            // Ejecutar la opción seleccionada
+          
             switch (option) {
                 case 1:
                     registerSpace();
@@ -78,7 +78,7 @@ public class ReservationSystem {
     }
 
     /**
-     * Método para agregar una reserva
+     * Metodo para hacer una reserva
      */
     public void addReservation() {
         Scanner scanner = new Scanner(System.in);
@@ -88,7 +88,7 @@ public class ReservationSystem {
         String dateInput = scanner.nextLine();
         LocalDate date = LocalDate.parse(dateInput);
 
-        // Buscar el espacio solicitado
+        // Buscar el espacio que se solicite
         SportSpace space = null;
         for (SportSpace s : listSpace) {
             if (s.getName().equalsIgnoreCase(spaceName)) {
@@ -107,15 +107,15 @@ public class ReservationSystem {
     }
 
     /**
-     * Método para confirmar una reserva
+     * Metodo para confirmar una reserva
      */
     public void confirmReservation() {
         System.out.println("Confirmando reserva...");
-        // Aquí se implementaría la lógica para confirmar la reserva
+         // Me falta meter la logica de aqui
     }
 
     /**
-     * Método para cancelar una reserva
+     * Metodo para cancelar una reserva
      */
     public void cancelReservation() {
         System.out.println("Cancelando reserva...");
@@ -123,7 +123,7 @@ public class ReservationSystem {
     }
 
     /**
-     * Método para ver la disponibilidad de los espacios
+     * Metodo para ver la disponibilidad de los espacios
      */
     public void seeAvailability() {
         System.out.println("Espacios disponibles:");
@@ -142,13 +142,13 @@ class User implements Serializable {
     private String name;
     private String id;
 
-    // Constructor básico
+    // Constructor 
     public User(String name, String id) {
         this.name = name;
         this.id = id;
     }
 
-    // Métodos simples para simular acciones de un usuario
+    // Metodos para disimular acciones de un usuario
     public void makeReservation() {
         System.out.println("Haciendo una reserva...");
         //Me falta meter la logica de aqui
