@@ -152,8 +152,8 @@ public class User {
                 default:
                     System.out.println("opcion no valida");
                     break;
+                    
             }
-            
-        }     
-    }
+        }
+    }
 }
