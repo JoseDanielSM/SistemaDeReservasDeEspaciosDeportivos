@@ -5,9 +5,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * @author Greice
+ * Esta clase se encarga de editar las reservas, compartirlas y notificar.
+ */
 public class Reservation {
-// webi wabo
     private SportSpace sportSpace;
     private LocalDate date;
     private LocalTime startTime;
