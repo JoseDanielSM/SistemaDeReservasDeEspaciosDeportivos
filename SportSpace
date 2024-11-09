@@ -1,0 +1,304 @@
+package sportspace;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+
+public class Main {
+    
+    public static void main(String[] args) throws Exception {
+       BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+       SportSpace sp = new SportSpace();
+      
+       
+       try {
+     
+          /**
+           *Inicio del sistema de espacios deportivos
+           */
+           System.out.println("--------------------------------------------");
+           System.out.println("BIENVENIDO AL SISTEMA DE ESPACIOS DEPORTIVOS");
+           System.out.println("--------------------------------------------");
+          
+          
+        /**
+         * Menú de espacios deportivos disponibles
+         */
+           System.out.println("------------------------------------------");
+           System.out.println("MENU DE ESPACIOS DEPORTIVOS DISPONIBLES");
+           System.out.println("-----------------------------------------");
+           System.out.println("1.Cancha sintética Golfito");
+           System.out.println("----------------------------");
+           System.out.println("Deportes Disponibles");
+           System.out.println("---------------------");
+           System.out.println("1.Futsal");
+           System.out.println("2.Voleibol");
+           System.out.println("3.Baloncesto");
+           System.out.println("4.Salir.");
+           System.out.println("----------------------------------");
+           System.out.println("2.Academia de taekwondo Golfito");
+           System.out.println("--------------------------------");
+           System.out.println("Deportes Disponibles");
+           System.out.println("---------------------");
+           System.out.println("1.Taekwondo");
+           System.out.println("2.Salir");
+           System.out.println("----------------------------------------------");
+           System.out.println("3.Gimnasio de la Universidad de Costa Rica");
+           System.out.println("------------------------------------------------");
+           System.out.println("1.Entremamiento Personal");
+           System.out.println("2.Salir");
+           System.out.println("--------------------------------------------------");
+          
+             /**
+              * Menú de deportes disponibles
+              */
+            System.out.print("Seleccione el tipo de espacio deportivo que desea registar:");
+            int opSpace = Integer.parseInt(br.readLine()); 
+            sp.registerAvailableSportSpace(opSpace, opSpace);
+                    /**
+             *Registar el tipo de espacio deportivo
+             */
+         
+            System.out.println("-----------------------------------------------------");
+           System.out.print("Seleccione el deporte que desea registrar:");
+            int opSport = Integer.parseInt(br.readLine()); /**
+             * registar el deporte
+             */
+            sp.registerAvailableSportSpace(opSpace, opSport); 
+           
+                   
+           System.out.println("-------------------------------------------------------"); 
+          sp.sportSpaceAvailability(opSport, new String[]{"Gimnasio", "Cancha sintética", "Academia de Taekwondo"}); /**
+           * Llamado del método "sportSpaceAvailability"
+           * Para determinar la disponibilidad de los espacios
+           */
+          
+           System.out.println("-----------------------------------------------------");
+           sp.sportsAvaibilability(opSport); /**
+            * Verificar la disponibilidad de los deportes
+            */
+          
+           System.out.println("-------------------------------------------------------");
+           sp.sportSpaceCapacity(30); /**
+            * Llamado del método "sportSpaceCapacity"
+            * Para ver la capacidad de cupos disponibles de los espacios
+            */
+            
+       } catch (Exception e) {
+           System.out.println("¡¡Error de lectura¡¡");
+           e.printStackTrace();
+           
+       }
+       
+    }
+    
+   }
+    
+package sportspace;
+
+
+public class SportSpace {
+
+        //Atributos
+        private String sport;
+        private String sportSpaceType;
+        private String sportSpaceCapacity;
+        private String sportSpaceAvailability;
+        
+    public SportSpace() {
+    }
+
+    public SportSpace(String sport, String sportSpaceType, String sportSpaceCapacity, String sportSpaceAvailability) {
+        this.sport = sport;
+        this.sportSpaceType = sportSpaceType;
+        this.sportSpaceCapacity = sportSpaceCapacity;
+        this.sportSpaceAvailability = sportSpaceAvailability;
+    }
+
+    public String getSport() {
+        return sport;
+    }
+
+    public void setSport(String sport) {
+        this.sport = sport;
+    }
+
+    public String getSportSpaceType() {
+        return sportSpaceType;
+    }
+
+    public void setSportSpaceType(String sportSpaceType) {
+        this.sportSpaceType = sportSpaceType;
+    }
+
+    public String getSportSpaceCapacity() {
+        return sportSpaceCapacity;
+    }
+
+    public void setSportSpaceCapacity(String sportSpaceCapacity) {
+        this.sportSpaceCapacity = sportSpaceCapacity;
+    }
+
+    public String getSportSpaceAvailability() {
+        return sportSpaceAvailability;
+    }
+
+    public void setSportSpaceAvailability(String sportSpaceAvailability) {
+        this.sportSpaceAvailability = sportSpaceAvailability;
+    }
+
+    @Override
+    public String toString() {
+        return "SportSpace{" + "sport=" + sport + ", sportSpaceType=" + sportSpaceType + ", sportSpaceCapacity=" + sportSpaceCapacity + ", sportSpaceAvailability=" + sportSpaceAvailability + '}';
+    }
+        
+    /**
+     *Método para registar los espacios deportivos disponibles
+     */
+        public void registerAvailableSportSpace(int opSpace, int opSport) {
+            System.out.println("---------------------------------");
+    
+            String sportSpaceType[] = {"Cancha sintética","Academia de Taekwondo","Gimnasio"};
+           
+                         
+            switch (opSpace) { /**
+                *Menú principal de Espacios Deportivos
+                */
+               
+                case 1: //Cancha Sintética de Golfito
+                      
+                      System.out.println("Has registrado la cancha sintetica.");
+                      System.out.println("-------------------------------------");
+                      System.out.println("Deportes disponibles");
+                      System.out.println("----------------------");
+                      System.out.println("1.Futsal");
+                      System.out.println("2.Volleyball");
+                      System.out.println("3.Basketball");
+                      System.out.println("4.Salir");
+                      
+                      switch (opSport) { /**
+                       * SubMenú de la cancha sintética de Golfito
+                       */
+                          
+                          case 1:
+                              System.out.println("Has registardo Futsal.");
+                              break;
+                          case 2:
+                              System.out.println("Has registado Voleibol.");
+                              break;
+                          case 3:                             
+                              System.out.println("Has registado Baloncesto.");
+                              break;
+                          case 4:
+                              System.out.println("Volviendo al menu principal...");
+                              break;
+                          default:
+                              System.out.println("¡¡Opcion invalida¡¡");                                   
+                      }
+                      break;     
+                      
+                case 2:  //Academia de Taekwondo Golfito
+                      System.out.println("Has registrado la academia taekwondo.");
+                      System.out.println("--------------------------------------");
+                      System.out.println("Deportes disponible");
+                      System.out.println("----------------------");
+                      System.out.println("1.Taekwondo.");
+                      System.out.println("2.Salir");
+                      
+                      switch (opSport) { /**
+                       * SubMenú de la Academia de Taekwondo
+                       */
+                          case 1:
+                              System.out.println("Has registrado Taekwondo.");
+                              
+                             break;
+                          case 2:
+                              System.out.println("Volviendo al menu principal...");
+                              break;
+                          default:
+                              System.out.println("¡¡Opcion invalida¡¡");   
+                      }
+                     
+                      break;
+                      
+                case 3: //Ginnasio de la Universidad
+                       System.out.println("Has registardo sesion de ginmasio.");
+                              System.out.println("---------------------");
+                              System.out.println("Deportes disponibles");
+                              System.out.println("--------------------");
+                              System.out.println("1.Entrenamiento Funcional");
+                              System.out.println("2.Salir");
+                              
+                       switch (opSport) { /**
+                       * SubMenú del Gimnasio
+                       */
+                          case 1:
+                              System.out.println("Has registrado entrenamiento funcional.");                             
+                             break;
+                          case 2:
+                              System.out.println("Volviendo al menu principal...");
+                              break;
+                          default:
+                              System.out.println("¡¡Opcion invalida¡¡");   
+                      }
+            
+                       
+                      break;
+                              
+                case 4: 
+                    System.out.println("¡Saliendo del menu¡");  
+                      break;
+                default:
+                    System.out.println("¡¡Opcion invalida¡¡");
+            }
+                 
+        }
+            
+           public void sportSpaceAvailability(int opSpace, String[] sportSpaceType) { /**
+            * Método para verifica la disponibilidad de los espacios deportivos
+            */
+                if (opSpace == 1 || opSpace == 2 || opSpace == 3) { /**
+                 *Si el usuario seleciona alguno de los espacios deportivos,
+                 * entonces se registra el espacio deportivo. En caso contario no se registra.
+                 */
+                 
+                System.out.println("¡Espacio registrado con exito¡ :)"); 
+      
+            } else {
+                   System.out.println("¡No se registró el espacio deportivo¡ :(");                
+ 
+            }
+                
+           }
+          
+           public void sportsAvaibilability (int opSport) { /**
+            * Método para verificar la disponibilidad de los deportes
+            */
+               if (opSport == 1 || opSport == 2 || opSport == 3) { /**
+                * Si el usuario seleciona alguno de los deportes disponibles.
+                * en caso contrario no se registra
+                */
+                
+                System.out.println("¡Deporte registardo con exito¡ :)"); 
+               //Cancha sintética
+               } else {
+                   System.out.println("¡No se registro deporte¡ :(");                    
+ 
+            } 
+            
+           }
+
+           public void sportSpaceCapacity(int capacity) {
+                    capacity = 30; /**
+                     * Método para determinar la capacidad de los espacio deportivos
+                     */
+                    System.out.println("---------------------------");
+                    System.out.println("Capacidad maxima:"+capacity+"cupos");
+                    
+                    }
+              
+                    
+            }
+
+             
+         
