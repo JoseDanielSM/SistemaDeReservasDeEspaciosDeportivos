@@ -1,56 +1,23 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
 /**
- * @author Greice
- * Esta clase se encarga de editar las reservas, compartirlas y notificar.
+ *@author Grace Solano Delgado - C4K066
  */
-public class Reservation {
+public class Reservation implements Serializable {
     private SportSpace sportSpace;
     private LocalDate date;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private String state;
-    private User user;
 
-    // Método principal de reservación.
-    public static void main(String[] args) {
-        Reservation reservation = new Reservation();
-        reservation.showAvailableDates(10);
-        reservation.setState("Confirmada");
-        System.out.println("Estado de la reserva: " + reservation.getState());
+    // Constructor
+    public Reservation(SportSpace sportSpace, LocalDate date) {
+        this.sportSpace = sportSpace;
+        this.date = date;
     }
 
-    // Días disponibles para reservar.
-    public void showAvailableDates(int availableDays) {
-        List<LocalDate> dateReservation = new ArrayList<>();
-        LocalDate currentDate = LocalDate.now();
-
-        for (int i = 0; i < availableDays; i++) {
-            dateReservation.add(currentDate.plusDays(i));
-        }
-
-        // Mostrar fechas disponibles.
-        System.out.println("Las fechas de reservación disponibles son: ");
-        dateReservation.forEach(date -> {
-            System.out.print(date + " ");
-        });
-        System.out.println();
-    }
-
-    // Getters and setters.
-    public String getState() {
-        return this.state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
+    // Getters y Setters
     public SportSpace getSportSpace() {
         return sportSpace;
     }
@@ -67,87 +34,58 @@ public class Reservation {
         this.date = date;
     }
 
-    public LocalTime getStartTime() {
-        return startTime;
+    @Override
+    public String toString() {
+        return "Reserva: Espacio Deportivo = " + sportSpace.getName() + ", Fecha = " + date;
     }
 
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    // Validación de reserva por su tipo.
-    public void validateReservationType(String typeOfReservation) throws IOException {
-        switch (typeOfReservation) {
-            case "Gimnasio" ->
-                System.out.println("Reserva de gym.");
-            case "Cancha" ->
-                System.out.println("Reserva de cancha.");
-            case "Piscina" ->
-                System.out.println("Reserva de piscina.");
-            case "Spa" ->
-                System.out.println("Reserva de spa.");
-            default ->
-                System.out.println("No se encontró el tipo de reserva.");
+    // Metodo para guardar reservas en un archivo
+    public static void saveReservations(List<Reservation> reservations, String filename) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
+            oos.writeObject(reservations);
+        } catch (IOException e) {
+            System.out.println("Error al guardar las reservas: " + e.getMessage());
         }
     }
 
-    /**
-     * Validación de pago para la reservación.
-     */
-    public boolean confirmPayment() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
-        System.out.print("¿Desea confirmar el pago? (Sí/No) ");
-        String confirmation = reader.readLine();
-
-        if (confirmation.equalsIgnoreCase("Sí") || confirmation.equalsIgnoreCase("Yes")) {
-            System.out.println("Pago confirmado.");
-            return true;  // Pago confirmado.
-        } else {
-            System.out.println("Pago no confirmado.");
-            return false;  // Pago no confirmado
+    // Metodo para cargar reservas desde un archivo
+    public static List<Reservation> loadReservations(String filename) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
+            return (List<Reservation>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("No se pudieron cargar las reservas: " + e.getMessage());
+            return new ArrayList<>();
         }
     }
 
-    // Clase interna para el espacio deportivo
-    public static class SportSpace {
+    // Metodo para probar la clase
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        List<Reservation> reservations = new ArrayList<>();
 
-        private String name;
-        private String type;
-        private int capacity;
+        System.out.print("Ingrese el nombre del espacio deportivo: ");
+        String name = scanner.nextLine();
+        System.out.print("Ingrese la capacidad del espacio deportivo: ");
+        int capacity = scanner.nextInt();
+        scanner.nextLine(); // Limpiar el buffer
 
-        public SportSpace(String name, String type, int capacity) {
-            this.name = name;
-            this.type = type;
-            this.capacity = capacity;
-        }
+        SportSpace sportSpace = new SportSpace(name, capacity);
 
-        public String getName() {
-            return name;
-        }
+        System.out.print("Ingrese la fecha de la reserva (YYYY-MM-DD): ");
+        String dateStr = scanner.nextLine();
+        LocalDate date = LocalDate.parse(dateStr);
 
-        public String getType() {
-            return type;
-        }
+        Reservation reservation = new Reservation(sportSpace, date);
+        reservations.add(reservation);
 
-        public int getCapacity() {
-            return capacity;
-        }
+        System.out.println(reservation);
+
+        // Guardar las reservas en un archivo
+        saveReservations(reservations, "reservations.dat");
+
+        // Cargar las reservas desde el archivo
+        List<Reservation> loadedReservations = loadReservations("reservations.dat");
+        System.out.println("Reservas cargadas:");
+        loadedReservations.forEach(System.out::println);
     }
 }

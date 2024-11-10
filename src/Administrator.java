@@ -1,124 +1,123 @@
-import java.io.*;
-import java.net.*;
+import java.time.LocalDate;
+import java.util.Scanner;
+import java.util.List;
 
 /**
- * @author Jose Daniel Araya Hernandez
- * Esta clase se encarga de editar las reservas, compartirlas y notificar.
+ *@author José Daniel Araya Hernández
  */
 public final class Administrator extends User {
 
     public Administrator(String name, String id) {
         super(name, id);
     }
-
-    /**
-     * Edita la reserva realizada y maneja posibles excepciones.
-     *
-     * @throws IOException 
-     */
-    public void manageSpace() throws IOException {
-        String fileName = "reservas.txt";
-
-        // Leer el contenido del archivo reservas.txt
-        StringBuilder content = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                content.append(line).append(System.lineSeparator());
-            }
-        } catch (IOException ex) {
-            System.out.println("Error al leer el archivo: " + ex.getMessage());
-            return;
-        }
-
-        // Reemplazar el contenido del archivo según sea necesario
-        String nuevoContenido = content.toString().replace("before.", "after.");
-
-        // Escribir el nuevo contenido en el archivo
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName))) {
-            bw.write(nuevoContenido);
-        } catch (IOException ex) {
-            System.out.println("Error al escribir en el archivo: " + ex.getMessage());
-        }
-
-        System.out.println("Archivo modificado.");
-    }
-
+    
     /**
      * Muestra las reservas realizadas.
-     *
-     * @throws IOException 
      */
-    public void seeReservationMade() throws IOException {
-        String fileName = "reservas.txt";
-
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (IOException ex) {
-            System.out.println("No se pudo encontrar el archivo.");
-            ex.printStackTrace(System.out);
+    public void seeReservationMade() {
+        List<Reservation> reservations = Reservation.loadReservations("reservations.dat");
+        if (reservations.isEmpty()) {
+            System.out.println("No hay reservas realizadas.");
+        } else {
+            System.out.println("--- Reservas Realizadas ---");
+            reservations.forEach(System.out::println);
         }
     }
 
     /**
-     * Método de sugerencia para modificar un usuario (por implementar).
+     * Agrega una nueva reserva
+     * @param scanner
      */
-    public void modifyUser() {
-        // Sugerencia de eliminación.
+    public void addReservation(Scanner scanner) {
+        System.out.print("Ingrese el nombre del espacio deportivo: ");
+        String name = scanner.nextLine();
+        System.out.print("Ingrese la capacidad del espacio deportivo: ");
+        int capacity = scanner.nextInt();
+        scanner.nextLine(); // Limpia el buffer
+
+        SportSpace sportSpace = new SportSpace(name, capacity);
+
+        System.out.print("Ingrese la fecha de la reserva (YYYY-MM-DD): ");
+        String dateStr = scanner.nextLine();
+        LocalDate date = LocalDate.parse(dateStr);
+
+        Reservation newReservation = new Reservation(sportSpace, date);
+        List<Reservation> reservations = Reservation.loadReservations("reservations.dat");
+        reservations.add(newReservation);
+        Reservation.saveReservations(reservations, "reservations.dat");
+
+        System.out.println("Reserva agregada con éxito.");
     }
 
     /**
-     * Comparte la reserva con otras personas.
-     *
-     * @throws IOException
+     * Cancela una reserva existente
+     * @param scanner
      */
-    
-    // Eliminé @Override
-public void shareReservation() throws IOException {
-    int puerto = 5000;
+    public void cancelReservation(Scanner scanner) {
+        System.out.print("Ingrese el nombre del espacio deportivo a cancelar la reserva: ");
+        String name = scanner.nextLine();
+        System.out.print("Ingrese la fecha de la reserva (YYYY-MM-DD): ");
+        String dateStr = scanner.nextLine();
+        LocalDate date = LocalDate.parse(dateStr);
 
-    try (ServerSocket servidorSocket = new ServerSocket(puerto)) {
-        System.out.println("Esperando conexión...");
-        Socket socket = servidorSocket.accept();
-        System.out.println("Cliente conectado.");
+        List<Reservation> reservations = Reservation.loadReservations("reservations.dat");
+        reservations.removeIf(reservation -> reservation.getSportSpace().getName().equalsIgnoreCase(name) && reservation.getDate().equals(date));
+        Reservation.saveReservations(reservations, "reservations.dat");
 
-        File archivo = new File("reservas.txt");
-        try (FileInputStream fileInputStream = new FileInputStream(archivo);
-             BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
-             OutputStream outputStream = socket.getOutputStream()) {
+        System.out.println("Reserva cancelada (si existía).");
+    }
 
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = bufferedInputStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Administrator admin = new Administrator("Admin", "001");
+
+        while (true) {
+            System.out.println("-------- Menú de Opciones ----------");
+            System.out.println("1. Ver Reservas Realizadas");
+            System.out.println("2. Agregar Reserva");
+            System.out.println("3. Cancelar Reserva");
+            System.out.println("4. Salir");
+            System.out.println("------------------------------------");
+
+            System.out.print("Ingrese la opción: ");
+            int option = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (option) {
+                case 1:
+                    admin.seeReservationMade();
+                    break;
+                case 2:
+                    admin.addReservation(scanner);
+                    break;
+                case 3:
+                    admin.cancelReservation(scanner);
+                    break;
+                case 4:
+                    System.out.println("Saliendo del sistema....");
+                    return;
+                default:
+                    System.out.println("Opción no válida");
+                    break;
             }
-
-            System.out.println("Archivo enviado.");
         }
-    } catch (IOException e) {
-        System.out.println("Error durante la conexión: " + e.getMessage());
-        e.printStackTrace();
     }
 }
 
+class User {
+    private String name;
+    private String id;
 
-    /**
-     * Método que maneja el espacio de calidad (ya implementado en otro código).
-     *
-     * @throws IOException
-     */
-    public void qualitySpace() throws IOException {
-        // Esta parte ya la hace el código de Leo.
+    public User(String name, String id) {
+        this.name = name;
+        this.id = id;
     }
 
-    /**
-     * Recibe notificaciones (por implementar).
-     */
-    public void receiveNotification() {
-        // Por implementar.
-}
+    public String getName() {
+        return name;
+    }
 
+    public String getId() {
+        return id;
+    }
 }
