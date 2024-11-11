@@ -72,6 +72,7 @@ public class ReservationSystem {
 
     /**
      * Este metodo es para registrar un nuevo espacio deportivo.
+     * @param scanner
      */
     public void registerSpace(Scanner scanner) {
         System.out.print("Ingrese el nombre del espacio deportivo: ");
@@ -87,6 +88,7 @@ public class ReservationSystem {
 
     /**
      * Este metodo es para modificar un espacio deportivo que ya existe.
+     * @param scanner
      */
     public void modifySpace(Scanner scanner) {
         System.out.print("Ingrese el nombre del espacio deportivo a modificar: ");
@@ -107,6 +109,7 @@ public class ReservationSystem {
 
     /**
      * Este metodo funciona para eliminar un espacio deportivo que se haya agregado previamente.
+     * @param scanner
      */
     public void deleteSpace(Scanner scanner) {
         System.out.print("Ingrese el nombre del espacio deportivo a eliminar: ");
@@ -125,13 +128,14 @@ public class ReservationSystem {
         } else {
             System.out.println("Espacios disponibles:");
             for (SportSpace space : listSpace) {
-                System.out.println("- " + space.getName() + " (Capacidad: " + space.getCapacity() + ", Disponible: " + (space.isAvailable() ? "Sí" : "No") + ")");
+                System.out.println("- " + space.getName() + " (Capacidad: " + space.getCapacity() + ", Disponible: " + (space.isAvailable() ? "Si" : "No") + ")");
             }
         }
     }
 
     /**
      * Este metodo es para crear una reserva con todo y la fecha.
+     * @param scanner
      */
     public void makeReservation(Scanner scanner) {
         System.out.print("Ingrese el nombre del espacio deportivo a reservar: ");
@@ -145,7 +149,7 @@ public class ReservationSystem {
                 Reservation newReservation = new Reservation(space, date);
                 listReservations.add(newReservation);
                 space.setAvailable(false);
-                System.out.println("Reserva realizada con éxito!");
+                System.out.println("Reserva realizada con exito!");
                 return;
             }
         }
@@ -154,6 +158,7 @@ public class ReservationSystem {
 
     /**
      * Este metodo es para cancelar una reserva.
+     * @param scanner
      */
     public void cancelReservation(Scanner scanner) {
         System.out.print("Ingrese el nombre del espacio deportivo a cancelar la reserva: ");
